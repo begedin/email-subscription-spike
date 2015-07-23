@@ -15,29 +15,35 @@ $(document).ready(function() {
   }
 
   function subscribeWithMailChimpAPI(email) {
-    var apiEndpoint = 'https://us2.api.mailchimp.com/3.0/';
-    var listID = '755721';
-    var apiKey = 'fcf1fe7877d9d22f04c9650215438e74-us2';
-    var crossDomainFlag = '?c=?';
-    var listEndpoint = apiEndpoint + 'lists/' + listID + '/members/';// + crossDomainFlag;
-
-    $.post(listEndpoint, {
+    $.post('/', {
       data: {
-        username: 'subscribe-form-spike',
-        password: apiKey,
-        email_address: email,
-        status: 'subscribed'
+        email: email,
       },
-      crossDomain: true,
-      dataType: 'json'
     }).done(onSuccessfulSubscription).fail(onFailedSubscription);
   }
 
   function onSuccessfulSubscription() {
-    var i = 0;
+    console.log('succesfully subscribed!')
   }
 
-  function onFailedSubscription() {
-    var i = 0;
+  function onFailedSubscription(error) {
+    console.log(error);
+    showError(error.responseJSON);
+  }
+
+  function showError(errorResponse) {
+    var code = errorResponse.code;
+    var name = errorResponse.name;
+
+    var $errorElement = $('.error');
+
+    $errorElement.find('.code').html(code);
+    $errorElement.find('.name').html(name);
+
+    $errorElement.show();
+
+    window.setTimeout(function() {
+      $errorElement.hide();
+    }, 2000);
   }
 });
